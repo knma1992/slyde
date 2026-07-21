@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 
+/// Marker for slides that scroll their own content (e.g. a [ListView]).
+///
+/// The [SlideShow] disables its pinch/scroll zoom for these slides so the
+/// mouse wheel scrolls the slide's content instead of zooming the whole slide.
+/// Implement it on a slide widget: `class MySlide extends StatelessWidget
+/// implements NonZoomableSlide`.
+abstract class NonZoomableSlide {}
+
 class SlideShow extends StatefulWidget {
   const SlideShow({super.key, required this.slides});
 
@@ -53,6 +61,24 @@ class _SlideShowState extends State<SlideShow> {
   void _resetScale() => setState(() => _scale = 1.0);
 
   // --- Input ---------------------------------------------------------------
+
+  /// Whether the current keyboard focus is inside a text field, in which case
+  /// the slideshow leaves the keys alone (typing, cursor movement).
+  bool get _isTextFieldFocused {
+    final context = FocusManager.instance.primaryFocus?.context;
+    if (context == null) return false;
+    if (context.widget is EditableText) return true;
+    var editable = false;
+    context.visitAncestorElements((element) {
+      if (element.widget is EditableText) {
+        editable = true;
+        return false;
+      }
+      return true;
+    });
+    return editable;
+  }
+
   Future<void> _onKeyEvent(KeyEvent event) async {
     final key = event.logicalKey;
     final isDown = event is KeyDownEvent;
@@ -89,10 +115,19 @@ class _SlideShowState extends State<SlideShow> {
   // --- Build ---------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
+    final slide = widget.slides[_index];
+    // Slides that manage their own scrolling opt out of pinch/scroll zoom so
+    // the mouse wheel scrolls their content instead of zooming the slide.
+    final zoomEnabled = slide is! NonZoomableSlide;
+
     return Focus(
       focusNode: _focusNode,
       autofocus: true,
       onKeyEvent: (node, event) {
+        // Skip shortcuts only while a text field is focused, so an accidental
+        // arrow/space/+/- press during typing isn't hijacked for navigation.
+        // Other focusable widgets (buttons, dropdowns) still allow shortcuts.
+        if (_isTextFieldFocused) return KeyEventResult.ignored;
         _onKeyEvent(event);
         return KeyEventResult.ignored;
       },
@@ -121,8 +156,10 @@ class _SlideShowState extends State<SlideShow> {
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(32, 20, 32, 16),
                         child: InteractiveViewer(
+                          scaleEnabled: zoomEnabled,
+                          panEnabled: zoomEnabled,
                           transformationController: _controller,
-                          child: widget.slides[_index],
+                          child: slide,
                         ),
                       ),
                     ),
