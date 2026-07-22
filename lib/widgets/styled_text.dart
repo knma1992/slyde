@@ -44,15 +44,15 @@ class HighlightText extends StatelessWidget {
 class NormalText extends StatelessWidget {
   final String text;
   final TextStyle? style;
-
-  const NormalText(this.text, {super.key, this.style});
+  final TextAlign? textAlign;
+  const NormalText(this.text, {super.key, this.style, this.textAlign});
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: style ?? context.textTheme.displayMedium?.copyWith(),
-      textAlign: .center,
+      style: style ?? context.textTheme.displayMedium,
+      textAlign: textAlign ?? .center,
     );
   }
 }
@@ -67,7 +67,7 @@ class SmallText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: style ?? context.textTheme.displaySmall?.copyWith(),
+      style: style ?? context.textTheme.displaySmall,
       textAlign: .center,
     );
   }

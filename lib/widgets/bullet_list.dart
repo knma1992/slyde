@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:slyde/context_extensions.dart';
+import 'package:slyde/widgets/item.dart';
+import 'package:slyde/widgets/item_list.dart';
 
+/// Convenience shorthand for a plain, static bullet list of strings.
+/// For nesting, expansion, labels, or per-level styling use [ItemList].
 class BulletList extends StatelessWidget {
   final List<String> items;
   final TextStyle? style;
@@ -8,32 +11,10 @@ class BulletList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 16,
-      crossAxisAlignment: .start,
-      children: [for (final item in items) BulletItem(item, style: style)],
-    );
-  }
-}
-
-class BulletItem extends StatelessWidget {
-  final String item;
-  final TextStyle? style;
-  const BulletItem(this.item, {super.key, this.style});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const .only(right: 32.0),
-      child: Row(
-        crossAxisAlignment: .start,
-        children: [
-          Text('• ', style: style ?? context.textTheme.displaySmall),
-          Expanded(
-            child: Text(item, style: style ?? context.textTheme.displaySmall),
-          ),
-        ],
-      ),
+    return ItemList(
+      group: ItemGroup(bodyStyle: style, [
+        for (final item in items) Item(item),
+      ]),
     );
   }
 }

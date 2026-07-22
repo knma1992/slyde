@@ -58,7 +58,10 @@ class _SlideShowState extends State<SlideShow> {
   void _decreaseScale() =>
       setState(() => _scale = (_scale - 0.04).clamp(0.5, 2.0));
 
-  void _resetScale() => setState(() => _scale = 1.0);
+  void _resetScale() => setState(() {
+    _scale = 1.0;
+    _controller.value = Matrix4.identity();
+  });
 
   // --- Input ---------------------------------------------------------------
 
