@@ -18,3 +18,15 @@ class BulletList extends StatelessWidget {
     );
   }
 }
+
+/// A single bullet row — shorthand for a one-element [BulletList].
+class BulletItem extends StatelessWidget {
+  final String text;
+  final TextStyle? style;
+  const BulletItem(this.text, {super.key, this.style});
+
+  @override
+  Widget build(BuildContext context) {
+    return BulletList(items: [text], style: style);
+  }
+}
