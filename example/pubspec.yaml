@@ -1,0 +1,21 @@
+name: slyde_example
+description: Example slide deck showcasing every slyde widget.
+publish_to: "none"
+version: 1.0.0
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  slyde:
+    path: ../
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/demo.md
