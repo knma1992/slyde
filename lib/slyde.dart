@@ -13,6 +13,8 @@ export 'context_extensions.dart';
 
 // Slide-building widgets
 export 'widgets/bullet_list.dart';
+export 'widgets/numbered_list.dart';
+export 'widgets/item.dart';
 export 'widgets/headline.dart';
 export 'widgets/labeled_list.dart';
 export 'widgets/markdown_widget_block.dart';
