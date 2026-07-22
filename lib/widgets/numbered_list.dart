@@ -7,11 +7,13 @@ class NumberedList extends StatefulWidget {
   final List<Item> items;
   final TextStyle? bodyStyle;
   final TextStyle? numberStyle;
+  final TextStyle? additionalStyle;
   const NumberedList({
     super.key,
     required this.items,
     this.bodyStyle,
     this.numberStyle,
+    this.additionalStyle,
   });
 
   @override
@@ -42,6 +44,7 @@ class _NumberedListState extends State<NumberedList> {
             onTap: item.isExpandable ? () => _onItemTapped(number) : null,
             bodyStyle: widget.bodyStyle,
             numberStyle: widget.numberStyle,
+            additionalStyle: widget.additionalStyle,
           ),
       ],
     );
@@ -56,6 +59,7 @@ class _NumberedItem extends StatelessWidget {
 
   final TextStyle? bodyStyle;
   final TextStyle? numberStyle;
+  final TextStyle? additionalStyle;
   const _NumberedItem(
     this.number,
     this.item, {
@@ -63,6 +67,7 @@ class _NumberedItem extends StatelessWidget {
     required this.onTap,
     this.bodyStyle,
     this.numberStyle,
+    this.additionalStyle,
   });
 
   TextStyle? adaptingStyle(BuildContext context, TextStyle? style) {
@@ -119,7 +124,8 @@ class _NumberedItem extends StatelessWidget {
                                 additional,
                                 style: adaptingStyle(
                                   context,
-                                  bodyStyle ?? context.textTheme.displaySmall,
+                                  additionalStyle ??
+                                      context.textTheme.displaySmall,
                                 ),
                               ),
                             ),
