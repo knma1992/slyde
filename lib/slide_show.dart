@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'util.dart';
+
 /// Marker for slides that scroll their own content (e.g. a [ListView]).
 ///
 /// The [SlideShow] disables its pinch/scroll zoom for these slides so the
@@ -92,9 +94,13 @@ class _SlideShowState extends State<SlideShow> {
       _decreaseScale();
     } else if (isDown && key == LogicalKeyboardKey.keyH) {
       _titleBarVisible = !_titleBarVisible;
-      await windowManager.setTitleBarStyle(
-        _titleBarVisible ? TitleBarStyle.normal : TitleBarStyle.hidden,
-      );
+      final window = slideShowWindow;
+      if (window != null) {
+        window.titleBarStyle = _titleBarVisible
+            ? TitleBarStyle.normal
+            : TitleBarStyle.hidden;
+        window.isWindowControlButtonsVisible = true;
+      }
     } else if (isDown && key == LogicalKeyboardKey.arrowLeft) {
       _previous();
     } else if (isDown && key == LogicalKeyboardKey.arrowRight) {
